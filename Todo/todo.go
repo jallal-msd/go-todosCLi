@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	_"log"
+	"net/http"
 	"os"
 	"time"
 
@@ -19,6 +21,14 @@ type item struct {
 }
 type Todos []item 
 
+func (t *Todos) ShowOnBrowser(w http.ResponseWriter, q *http.Request)  {
+    todo, err := json.Marshal(*t)
+    if err != nil{
+        return 
+    }
+    fmt.Fprintf(w, "%s",todo )
+    
+}
 func (t *Todos) Add(task string) {
     
     tk := item{

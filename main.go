@@ -6,6 +6,8 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"log"
+	"net/http"
 	"os"
 	"strings"
 	"todo/Todo"
@@ -21,6 +23,7 @@ func main(){
     complete := flag.Int("complete", 0, "mark a todo as completed")
     del := flag.Int("del", 0, "delete a todo")
     list := flag.Bool("list", false , "list all todos")
+    browser := flag.Bool("browser", false, "show json on browser")
 
     flag.Parse()
     
@@ -32,6 +35,9 @@ func main(){
         os.Exit(0)
     }
     switch {
+        case *browser:
+            http.HandleFunc("/", todos.ShowOnBrowser)
+            log.Fatal(http.ListenAndServe("localhost:8000", nil))
         case *add:
             task ,  err := getInput(os.Stdin, flag.Args()...)
             if err != nil {
